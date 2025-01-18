@@ -8,7 +8,6 @@ A simple CLI tool that combines common Git commands (add, commit, push) into a s
 
 ## Installation
 Download the appropriate binary for your system:
-- git clone https://github.com/yourusername/acp.git
 - `acp-linux` for Linux systems
 - `acp-mac` for macOS systems
 
