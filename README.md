@@ -21,6 +21,7 @@ sudo mv acp-linux /usr/local/bin/acp
 chmod +x acp-mac
 sudo mv acp-mac /usr/local/bin/acp
 ```
+
 ## Usage
 
 ### Basic usage (uses current branch name as commit message):
@@ -32,13 +33,21 @@ This will:
 2. Commit with branch name as message (`git commit -m "<branch-name>"`)
 3. Push to remote, setting upstream if needed (`git push` or `git push --set-upstream origin HEAD`)
 
+### Custom commit message:
+```bash
+acp --m "your commit message here"
+```
+This will use your custom message instead of the branch name.
+
 ### Add specific files, then commit and push:
 ```bash
 acp add file1.txt file2.txt
+# Can also use custom message:
+acp add file1.txt --m "updated files"
 ```
 This will:
 1. Stage specified files (`git add file1.txt file2.txt`)
-2. Commit with branch name as message
+2. Commit with branch name as message (or custom message if --m is used)
 3. Push to remote (with upstream handling)
 
 ### Add files without committing (staging only):
