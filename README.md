@@ -16,7 +16,9 @@ Then make it executable and move to your PATH:
 # For Linux
 chmod +x acp-linux
 sudo mv acp-linux /usr/local/bin/acp
+```
 
+```bash
 # For macOS
 chmod +x acp-mac
 sudo mv acp-mac /usr/local/bin/acp
