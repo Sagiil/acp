@@ -13,17 +13,21 @@ func gitAdd(files []string) error {
 	return addCmd.Run()
 }
 
-func gitCommitAndPush(files []string) error {
-	// Get current branch name
-	branchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
-	branchOutput, err := branchCmd.Output()
-	if err != nil {
-		return fmt.Errorf("error getting branch name: %w", err)
+
+func gitCommitAndPush(files []string, commitMessage string) error {
+	// If no commit message provided, use branch name
+	if commitMessage == "" {
+		// Get current branch name
+		branchCmd := exec.Command("git", "rev-parse", "--abbrev-ref", "HEAD")
+		branchOutput, err := branchCmd.Output()
+		if err != nil {
+			return fmt.Errorf("error getting branch name: %w", err)
+		}
+		commitMessage = strings.TrimSpace(string(branchOutput))
 	}
-	branchName := strings.TrimSpace(string(branchOutput))
 
 	// Commit
-	commitCmd := exec.Command("git", "commit", "-m", branchName)
+	commitCmd := exec.Command("git", "commit", "-m", commitMessage)
 	if err := commitCmd.Run(); err != nil {
 		return fmt.Errorf("error committing changes: %w", err)
 	}
@@ -57,13 +61,28 @@ func executeGitCommand(args []string) error {
 func main() {
 	args := os.Args[1:]
 
+	// Parse for commit message flag
+	var commitMessage string
+	var newArgs []string
+	for i := 0; i < len(args); i++ {
+		if args[i] == "--m" {
+			if i+1 < len(args) {
+				commitMessage = args[i+1]
+				i++ // skip next arg since it's the message
+				continue
+			}
+		}
+		newArgs = append(newArgs, args[i])
+	}
+	args = newArgs
+
 	// If no arguments, perform default behavior (add all, commit, push)
 	if len(args) == 0 {
 		if err := gitAdd([]string{"."}); err != nil {
 			fmt.Println("Error staging changes:", err)
 			os.Exit(1)
 		}
-		if err := gitCommitAndPush([]string{"."}); err != nil {
+		if err := gitCommitAndPush([]string{"."}, commitMessage); err != nil {
 			fmt.Println(err)
 			os.Exit(1)
 		}
@@ -97,7 +116,7 @@ func main() {
 
 		if !isAppend {
 			// If not append, also commit and push
-			if err := gitCommitAndPush(files); err != nil {
+			if err := gitCommitAndPush(files, commitMessage); err != nil {
 				fmt.Println(err)
 				os.Exit(1)
 			}
