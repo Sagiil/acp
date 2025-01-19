@@ -26,7 +26,7 @@ sudo mv acp-mac /usr/local/bin/acp
 
 ## Usage
 
-### Basic usage (uses current branch name as commit message):
+### Basic usage:
 ```bash
 acp
 ```
@@ -60,6 +60,8 @@ This will only stage the specified files (`git add file1.txt file2.txt`)
 
 ### Pass-through git commands:
 ```bash
+acp commit              # runs: git commit
+acp push                # runs: git push
 acp status              # runs: git status
 acp checkout -b fix-bug # runs: git checkout -b fix-bug
 acp log                 # runs: git log
